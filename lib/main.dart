@@ -28,12 +28,18 @@ class _LogScreenState extends State<LogScreen> {
   final TextEditingController _controller = TextEditingController();
 
   void _saveLog() async {
-    if (_controller.text.isEmpty) return;
-    await FirebaseFirestore.instance.collection('logs').add({
-      'text': _controller.text,
-      'createdAt': Timestamp.now(),
-    });
-    _controller.clear();
+  print("【ボタン押された！】"); // これを一番上に入れる
+  if (_controller.text.isEmpty) return;
+    try {
+      await FirebaseFirestore.instance.collection('logs').add({
+        'text': _controller.text,
+        'createdAt': Timestamp.now(),
+      });
+      _controller.clear();
+      print("【成功】データベースに保存されました！"); // これを追加
+    } catch (e) {
+      print("【エラー】保存に失敗しました：$e"); // これを追加
+    }
   }
 
   @override
@@ -42,8 +48,13 @@ class _LogScreenState extends State<LogScreen> {
       appBar: AppBar(title: Text("投資思考ログ")),
       body: Column(
         children: [
-          TextField(controller: _controller, decoration: InputDecoration(hintText: "今の思考を記録...")),
-          ElevatedButton(onPressed: _saveLog, child: Text("保存する")),
+          TTextField(controller: _controller, decoration: InputDecoration(hintText: "今の思考を記録...")),
+          ElevatedButton(
+            onPressed: () {
+              print("【ボタン押された！】確認用");
+              _saveLog();
+            }, 
+            child: Text("保存する")
         ],
       ),
     );
