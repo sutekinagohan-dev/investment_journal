@@ -1,1 +1,1 @@
-# investment_journal
+# gemini_and_i
